@@ -1,0 +1,32 @@
+[
+  {
+    "path": ["Authentication"],
+    "name": "Login",
+    "curl": "curl -X POST https://api.hcm.com/auth/login -H 'Content-Type: application/json' -d '{\"username\":\"jdoe\",\"password\":\"secret\"}'",
+    "sampleResponse": { "token": "eyJhbGciOi...", "expiresIn": 3600 }
+  },
+  {
+    "path": ["Core HCM", "Employee Profile Management", "View Personal Details"],
+    "name": "View Personal Info [S1-WIP-R140226]",
+    "curl": "curl -X POST https://api.hcm.com/hcm/employee/personal-info -H 'Content-Type: application/json' -H 'Authorization: Bearer {{token}}' -d '{\"employeeId\":123}'",
+    "sampleResponse": { "employeeId": 123, "firstName": "John", "lastName": "Doe" }
+  },
+  {
+    "path": ["Core HCM", "Employee Profile Management", "View Personal Details"],
+    "name": "View Government ID Doc [S9-C-R140226]",
+    "curl": "curl -X POST https://api.hcm.com/hcm/employee/gov-id-doc -H 'Content-Type: application/json' -H 'Authorization: Bearer {{token}}' -d '{\"employeeId\":123}'",
+    "sampleResponse": { "employeeId": 123, "docType": "PASSPORT", "docUrl": "https://docs.hcm.com/123/passport.pdf" }
+  },
+  {
+    "path": ["Core HCM", "Employee Profile Management", "View Personal Details"],
+    "name": "View Worker Documents [S10-C-R260526]",
+    "curl": "curl -X POST https://api.hcm.com/hcm/employee/worker-documents -H 'Content-Type: application/json' -H 'Authorization: Bearer {{token}}' -d '{\"employeeId\":123}'",
+    "sampleResponse": { "employeeId": 123, "documents": [] }
+  },
+  {
+    "path": ["Core HCM", "Employee Profile Management", "Compensation"],
+    "name": "Get Salary Details",
+    "curl": "curl https://api.hcm.com/hcm/employee/compensation/123 -H 'Authorization: Bearer {{token}}'",
+    "sampleResponse": { "employeeId": 123, "annualSalary": 1200000, "currency": "INR" }
+  }
+]

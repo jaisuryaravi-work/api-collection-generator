@@ -1,0 +1,37 @@
+===
+path: Authentication > SSO
+name: Login
+curl:
+curl --location '{{APIGateway}}/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "username": "YOUR_USERNAME",
+    "password": "YOUR_PASSWORD",
+    "trace": false
+}'
+sampleResponse:
+{}
+test:
+let bodydata = JSON.parse(JSON.stringify(pm.response.json()));
+sessionid = bodydata.data.sessionid;
+pm.globals.set('session', bodydata.data.sessionid);
+token = bodydata.data.token;
+pm.globals.set('token', bodydata.data.token);
+console.log(token);
+prerequest:
+console.log("about to refresh session");
+pm.globals.set('requestStartTime', Date.now());
+===
+path: Authentication > SSO
+name: Login
+curl:
+curl --location '{{APIGateway}}/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "username": "YOUR_USERNAME",
+    "password": "YOUR_PASSWORD",
+    "trace": false
+}'
+sampleResponse:
+{}
+===
