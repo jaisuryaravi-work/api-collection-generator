@@ -216,6 +216,20 @@ public class CurlParser {
             char c = command.charAt(i);
 
             if (c == '\'' && !inDoubleQuotes) {
+                // Bash's idiom for a literal apostrophe inside a single-quoted
+                // argument: close quote, backslash-escaped ', reopen quote -
+                // e.g. 'Driver'\''s License' means Driver's License. Treat
+                // the whole 4-char sequence as one literal ' and stay inside
+                // the quoted argument, rather than toggling quote state.
+                if (inSingleQuotes
+                        && i + 3 < command.length()
+                        && command.charAt(i + 1) == '\\'
+                        && command.charAt(i + 2) == '\''
+                        && command.charAt(i + 3) == '\'') {
+                    current.append('\'');
+                    i += 3;
+                    continue;
+                }
                 inSingleQuotes = !inSingleQuotes;
                 continue;
             }

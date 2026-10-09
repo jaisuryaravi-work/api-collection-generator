@@ -209,18 +209,30 @@ public class TextInventoryParser {
     /**
      * Updates single/double quote parity as text is appended to the curl
      * command, mirroring CurlParser's own tokenizer rules: inside a single
-     * quote, a double quote is literal (and vice versa).
+     * quote, a double quote is literal (and vice versa), and bash's '\''
+     * idiom (embedding a literal apostrophe inside a single-quoted
+     * argument) is a no-op for quote state, not a close+reopen.
      */
     private static void scanQuotes(String text, boolean[] quoteState) {
         boolean inSingle = quoteState[0];
         boolean inDouble = quoteState[1];
-        for (int i = 0; i < text.length(); i++) {
+        int i = 0;
+        while (i < text.length()) {
             char c = text.charAt(i);
             if (c == '\'' && !inDouble) {
+                if (inSingle
+                        && i + 3 < text.length()
+                        && text.charAt(i + 1) == '\\'
+                        && text.charAt(i + 2) == '\''
+                        && text.charAt(i + 3) == '\'') {
+                    i += 4;
+                    continue;
+                }
                 inSingle = !inSingle;
             } else if (c == '"' && !inSingle) {
                 inDouble = !inDouble;
             }
+            i++;
         }
         quoteState[0] = inSingle;
         quoteState[1] = inDouble;
